@@ -131,21 +131,37 @@
             <div class="space-y-3">
                 <label class="block font-semibold">ចំនួនទឹកប្រាក់ ($ USD)</label>
                 <input type="number" value="5.00" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
-                <button onclick="alert('កំពុងតភ្ជាប់ ABA PayWay...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold">បង់ប្រាក់ជាមួយ ABA</button>
+                <button onclick="alert('កំពុងតភ្ជាប់ ABA PayWay...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold">បង់ប្រាក់ជាមួយABA</button>
             </div>
         </div>
 
     </div>
 
-    <!-- JavaScript Logic with Instant Data -->
+    <!-- JavaScript Logic with Full Services -->
     <script>
-        // ទិន្នន័យសេវាកម្មគំរូ (ធានាថាលឿន និងមិនติด CORS บน GitHub Pages)
+        // បញ្ជីសេវាកម្មគ្រប់ប្រភេទទាំងអស់ (រៀបចំរួចជាស្រេច លឿន និងមិនติด CORS)
         const allServices = [
+            // Facebook Services
             { service: 101, name: "Facebook Page Followers [Real & Fast]", category: "Facebook - Followers", rate: "1.50", min: "100", max: "50000" },
-            { service: 102, name: "Facebook Post Likes [High Quality]", category: "Facebook - Likes", rate: "0.80", min: "50", max: "10000" },
-            { service: 201, name: "TikTok Video Views [Super Fast]", category: "TikTok - Views", rate: "0.10", min: "100", max: "1000000" },
-            { service: 202, name: "TikTok Followers [Non-Drop]", category: "TikTok - Followers", rate: "2.20", min: "100", max: "20000" },
-            { service: 301, name: "Telegram Channel Members [Real]", category: "Telegram - Members", rate: "1.20", min: "100", max: "50000" }
+            { service: 102, name: "Facebook Profile Followers [High Quality]", category: "Facebook - Followers", rate: "0.80", min: "50", max: "10000" },
+            { service: 103, name: "Facebook Post Likes [Non-Drop]", category: "Facebook - Likes", rate: "0.50", min: "50", max: "20000" },
+            { service: 104, name: "Facebook Video Views [Fast Speed]", category: "Facebook - Views", rate: "0.20", min: "100", max: "100000" },
+            { service: 105, name: "Facebook Live Stream Viewers [30 Minutes]", category: "Facebook Live", rate: "3.50", min: "50", max: "5000" },
+
+            // TikTok Services
+            { service: 201, name: "TikTok Video Views [Super Fast]", category: "TikTok - Views", rate: "0.05", min: "100", max: "1000000" },
+            { service: 202, name: "TikTok Followers [Real & Active]", category: "TikTok - Followers", rate: "2.10", min: "100", max: "20000" },
+            { service: 203, name: "TikTok Likes [High Quality]", category: "TikTok - Likes", rate: "0.90", min: "50", max: "50000" },
+            { service: 204, name: "TikTok Shares & Comments", category: "TikTok - Engagement", rate: "1.10", min: "100", max: "10000" },
+
+            // Telegram Services
+            { service: 301, name: "Telegram Channel Members [Real]", category: "Telegram - Members", rate: "1.20", min: "100", max: "50000" },
+            { service: 302, name: "Telegram Group Members [Active]", category: "Telegram - Members", rate: "1.50", min: "100", max: "30000" },
+            { service: 303, name: "Telegram Post Views [Last 10 Posts]", category: "Telegram - Views", rate: "0.10", min: "100", max: "100000" },
+
+            // YouTube Services
+            { service: 401, name: "YouTube Views [High Retention]", category: "YouTube - Views", rate: "3.00", min: "500", max: "50000" },
+            { service: 402, name: "YouTube Subscribers [Real Profiles]", category: "YouTube - Subscribers", rate: "12.00", min: "50", max: "5000" }
         ];
 
         function toggleSidebar() {
