@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- QRCode Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Kantumruy Pro', sans-serif; }
     </style>
@@ -40,7 +42,7 @@
             <li><a href="#" onclick="switchTab('order'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50 text-blue-600"><i class="fa-solid fa-cart-shopping mr-2"></i> New Order</a></li>
             <li><a href="#" onclick="switchTab('services'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-list mr-2"></i> Services List</a></li>
             <li><a href="#" onclick="switchTab('history'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Orders History</a></li>
-            <li><a href="#" onclick="switchTab('deposit'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-wallet mr-2"></i> Add Funds (ABA PayWay)</a></li>
+            <li><a href="#" onclick="switchTab('deposit'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-wallet mr-2"></i> Add Funds (Bakong KHQR)</a></li>
         </ul>
     </div>
 
@@ -125,41 +127,52 @@
             </div>
         </div>
 
-        <!-- TAB 4: DEPOSIT -->
-        <div id="tab-deposit" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs">
-            <h2 class="font-bold text-sm mb-3 text-blue-600"><i class="fa-solid fa-wallet"></i> ដាក់ប្រាក់តាម ABA PayWay</h2>
-            <div class="space-y-3">
-                <label class="block font-semibold">ចំនួនទឹកប្រាក់ ($ USD)</label>
-                <input type="number" value="5.00" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
-                <button onclick="alert('កំពុងតភ្ជាប់ ABA PayWay...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold">បង់ប្រាក់ជាមួយABA</button>
+        <!-- TAB 4: DEPOSIT WITH BAKONG KHQR -->
+        <div id="tab-deposit" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs space-y-3">
+            <h2 class="font-bold text-sm text-blue-600 text-center"><i class="fa-solid fa-qrcode mr-1"></i> ស្កេនបង់ប្រាក់តាម Bakong KHQR</h2>
+            <p class="text-[11px] text-gray-500 text-center">Bakong ID: <span class="font-bold text-gray-800">samnang_mon@bkrt</span></p>
+
+            <div>
+                <label class="block font-semibold text-gray-600 mb-1">ចំនួនទឹកប្រាក់ ($ USD)</label>
+                <input type="number" id="deposit-amount" value="5.00" min="1" step="0.5" oninput="generateKHQR()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
             </div>
+
+            <!-- QR Code Box -->
+            <div class="flex justify-center my-3">
+                <div class="p-3 bg-white border-2 border-blue-500 rounded-2xl shadow-inner inline-block">
+                    <div id="qrcode" class="flex justify-center items-center"></div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 p-2.5 rounded-lg text-[11px] text-blue-800 space-y-1">
+                <p class="font-semibold">💡 ណែនាំ:</p>
+                <p>១. បើក ABA Mobile ឬកម្មវិធីធនាគារផ្សេងៗស្កេន KHQR។</p>
+                <p>២. បង់ប្រាក់ទៅកាន់គណនី <span class="font-bold">samnang_mon@bkrt</span>។</p>
+            </div>
+
+            <button onclick="alert('ប្រព័ន្ធកំពុងផ្ទៀងផ្ទាត់ការទូទាត់របស់អ្នក...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">
+                <i class="fa-solid fa-check-circle mr-1"></i> ខ្ញុំបានបង់ប្រាក់រួចរាល់
+            </button>
         </div>
 
     </div>
 
-    <!-- JavaScript Logic with Full Services -->
+    <!-- JavaScript Logic -->
     <script>
-        // បញ្ជីសេវាកម្មគ្រប់ប្រភេទទាំងអស់ (រៀបចំរួចជាស្រេច លឿន និងមិនติด CORS)
+        // បញ្ជីសេវាកម្មពេញលេញ
         const allServices = [
-            // Facebook Services
             { service: 101, name: "Facebook Page Followers [Real & Fast]", category: "Facebook - Followers", rate: "1.50", min: "100", max: "50000" },
             { service: 102, name: "Facebook Profile Followers [High Quality]", category: "Facebook - Followers", rate: "0.80", min: "50", max: "10000" },
             { service: 103, name: "Facebook Post Likes [Non-Drop]", category: "Facebook - Likes", rate: "0.50", min: "50", max: "20000" },
             { service: 104, name: "Facebook Video Views [Fast Speed]", category: "Facebook - Views", rate: "0.20", min: "100", max: "100000" },
             { service: 105, name: "Facebook Live Stream Viewers [30 Minutes]", category: "Facebook Live", rate: "3.50", min: "50", max: "5000" },
-
-            // TikTok Services
             { service: 201, name: "TikTok Video Views [Super Fast]", category: "TikTok - Views", rate: "0.05", min: "100", max: "1000000" },
             { service: 202, name: "TikTok Followers [Real & Active]", category: "TikTok - Followers", rate: "2.10", min: "100", max: "20000" },
             { service: 203, name: "TikTok Likes [High Quality]", category: "TikTok - Likes", rate: "0.90", min: "50", max: "50000" },
             { service: 204, name: "TikTok Shares & Comments", category: "TikTok - Engagement", rate: "1.10", min: "100", max: "10000" },
-
-            // Telegram Services
             { service: 301, name: "Telegram Channel Members [Real]", category: "Telegram - Members", rate: "1.20", min: "100", max: "50000" },
             { service: 302, name: "Telegram Group Members [Active]", category: "Telegram - Members", rate: "1.50", min: "100", max: "30000" },
             { service: 303, name: "Telegram Post Views [Last 10 Posts]", category: "Telegram - Views", rate: "0.10", min: "100", max: "100000" },
-
-            // YouTube Services
             { service: 401, name: "YouTube Views [High Retention]", category: "YouTube - Views", rate: "3.00", min: "500", max: "50000" },
             { service: 402, name: "YouTube Subscribers [Real Profiles]", category: "YouTube - Subscribers", rate: "12.00", min: "50", max: "5000" }
         ];
@@ -176,9 +189,14 @@
                 'order': 'New order',
                 'services': 'Services List',
                 'history': 'Orders History',
-                'deposit': 'Add Funds (ABA PayWay)'
+                'deposit': 'Add Funds (Bakong KHQR)'
             };
             document.getElementById('current-page-label').innerText = titles[tabName];
+
+            // បើចូលថេបដាក់ប្រាក់ ឱ្យបង្កើត KHQR ស្វ័យប្រវត្តិ
+            if(tabName === 'deposit') {
+                generateKHQR();
+            }
         }
 
         function populateCategories() {
@@ -249,6 +267,24 @@
                     break;
                 }
             }
+        }
+
+        // Generate Bakong KHQR
+        function generateKHQR() {
+            const amount = document.getElementById('deposit-amount').value || 1;
+            const bakongId = "samnang_mon@bkrt";
+            
+            document.getElementById("qrcode").innerHTML = "";
+            const qrData = `BAKONG:${bakongId}?amt=${amount}&cur=USD`;
+
+            new QRCode(document.getElementById("qrcode"), {
+                text: qrData,
+                width: 160,
+                height: 160,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         }
 
         // Initialize on load
