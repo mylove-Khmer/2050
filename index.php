@@ -1,0 +1,249 @@
+<?php
+// ធ្វើការហៅ API ដើម្បីទាញយកសេវាកម្មទាំងអស់ពី khmer-smm.com
+$apiUrl = 'https://khmer-smm.com/api/v2';$postData = [
+    'key' => 'bfaefa38070b4c0510831f7a625e69f1',
+    'action' => 'services'
+];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL,$apiUrl);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+
+$services = json_decode($response, true);
+
+// จัดกลุ่ม Categories และ Services
+$categories = [];
+if (is_array($services)) {
+    foreach ($services as $service) {$cat = $service['category'] ?? 'General';$categories[$cat][] =$service;
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khmer SMM - Official Panel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Kantumruy Pro', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 pb-20">
+
+    <!-- Header Navbar -->
+    <header class="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <button onclick="toggleSidebar()" class="text-xl focus:outline-none"><i class="fa-solid fa-bars"></i></button>
+            <span class="font-bold text-lg">Khmer SMM</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button onclick="switchTab('deposit')" class="bg-white text-blue-600 px-3 py-1.5 rounded-full text-xs font-semibold shadow flex items-center space-x-1">
+                <i class="fa-solid fa-wallet"></i> <span>ដាក់ប្រាក់</span>
+            </button>
+            <div class="w-8 h-8 bg-red-400 rounded-full flex items-center justify-center font-bold text-white text-xs shadow">N</div>
+        </div>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl z-50 transform -translate-x-full transition-transform duration-300 p-4 space-y-4">
+        <div class="flex justify-between items-center border-b pb-3">
+            <span class="font-bold text-blue-600 text-lg">메ນូ / Menu</span>
+            <button onclick="toggleSidebar()" class="text-gray-500 text-lg"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <ul class="space-y-2 text-sm font-medium">
+            <li><a href="#" onclick="switchTab('order'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50 text-blue-600"><i class="fa-solid fa-cart-shopping mr-2"></i> New Order</a></li>
+            <li><a href="#" onclick="switchTab('services'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-list mr-2"></i> Services List</a></li>
+            <li><a href="#" onclick="switchTab('history'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Orders History</a></li>
+            <li><a href="#" onclick="switchTab('deposit'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-wallet mr-2"></i> Add Funds (ABA PayWay)</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-md mx-auto mt-4 px-4 space-y-4">
+
+        <!-- User Info Dashboard Card -->
+        <div class="bg-white p-4 rounded-xl shadow border border-gray-100">
+            <p class="text-xs text-gray-500">Status: <span class="text-blue-600 font-semibold" id="current-page-label">New order</span></p>
+            <div class="mt-2 text-xs grid grid-cols-2 gap-2 border-b border-gray-100 pb-3">
+                <p>Panel Orders: <span class="font-bold text-blue-600">3,895,626</span></p>
+                <p>My Orders: <span class="font-bold text-blue-600">35</span></p>
+                <p class="col-span-2">Total Spend: <span class="font-bold text-blue-600">$24.96</span></p>
+            </div>
+            <div class="mt-3 text-center">
+                <p class="text-xs">Welcome <span class="font-bold text-blue-600">nang150</span> Balance:</p>
+                <p class="text-xl font-bold text-green-600 mt-1">$0.136938</p>
+            </div>
+        </div>
+
+        <!-- Quick Platform Buttons -->
+        <div class="grid grid-cols-3 gap-2">
+            <button onclick="filterCategory('Facebook')" class="bg-white p-2.5 rounded-lg shadow-sm border text-xs font-semibold flex items-center justify-center space-x-1 hover:border-blue-500">
+                <i class="fa-brands fa-facebook text-blue-600"></i> <span>Facebook</span>
+            </button>
+            <button onclick="filterCategory('TikTok')" class="bg-white p-2.5 rounded-lg shadow-sm border text-xs font-semibold flex items-center justify-center space-x-1 hover:border-blue-500">
+                <i class="fa-brands fa-tiktok text-black"></i> <span>TikTok</span>
+            </button>
+            <button onclick="filterCategory('Telegram')" class="bg-white p-2.5 rounded-lg shadow-sm border text-xs font-semibold flex items-center justify-center space-x-1 hover:border-blue-500">
+                <i class="fa-brands fa-telegram text-sky-500"></i> <span>Telegram</span>
+            </button>
+        </div>
+
+        <!-- TAB 1: NEW ORDER SECTION -->
+        <div id="tab-order" class="tab-content bg-white p-4 rounded-xl shadow border border-gray-100">
+            <div class="flex space-x-2 mb-4">
+                <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg font-medium text-xs shadow">🛒 New Order</button>
+                <button onclick="alert('Mass Order Feature')" class="flex-1 bg-gray-100 text-gray-700 py-2 rounded-lg font-medium text-xs">⭐ Mass Order</button>
+            </div>
+
+            <form onsubmit="handleOrder(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Category</label>
+                    <select id="category-select" onchange="updateServiceDropdown()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
+                        <?php if (!empty($categories)): ?>
+                            <?php foreach (array_keys($categories) as$catName): ?>
+                                <option value="<?php echo htmlspecialchars($catName); ?>"><?php echo htmlspecialchars($catName); ?></option>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <option>No categories found</option>
+                        <?php endif; ?>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Service</label>
+                    <select id="service-select" onchange="updatePrice()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
+                        <!-- Populated via JavaScript -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Link</label>
+                    <input type="url" required placeholder="https://..." class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-600 mb-1">Quantity</label>
+                    <input type="number" id="qty" value="1000" min="10" oninput="calculateTotal()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
+                </div>
+                <div>
+                    <p class="text-gray-500">Total Charge: <span id="total-price" class="font-bold text-blue-600 text-sm">$0.00</span></p>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">Submit Order</button>
+            </form>
+        </div>
+
+        <!-- TAB 2: SERVICES LIST -->
+        <div id="tab-services" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs">
+            <h2 class="font-bold text-sm mb-3 text-blue-600">📋 បញ្ជីសេវាកម្មទាំងអស់</h2>
+            <div class="space-y-2 max-h-96 overflow-y-auto">
+                <?php if (!empty($services)): ?>
+                    <?php foreach ($services as$srv): ?>
+                        <div class="p-2.5 border rounded bg-gray-50 space-y-1">
+                            <p class="font-bold text-blue-900">[#<?php echo $srv['service']; ?>] <?php echo htmlspecialchars($srv['name']); ?></p>
+                            <p class="text-gray-500">Rate/1k: <span class="text-green-600 font-bold">$<?php echo$srv['rate']; ?></span> | Min: <?php echo $srv['min']; ?> - Max: <?php echo$srv['max']; ?></p>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-red-500 text-center">មិនអាចទាញយកទិន្នន័យពី API បានទេ!</p>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- TAB 3: ORDERS HISTORY -->
+        <div id="tab-history" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs">
+            <h2 class="font-bold text-sm mb-3 text-blue-600">🕒 ប្រវត្តិការកុម្ម៉ង់</h2>
+            <div class="p-3 border rounded bg-gray-50 text-center text-gray-500">
+                មិនទាន់មានប្រវត្តិការកុម្ម៉ង់នៅឡើយ
+            </div>
+        </div>
+
+        <!-- TAB 4: DEPOSIT -->
+        <div id="tab-deposit" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs">
+            <h2 class="font-bold text-sm mb-3 text-blue-600"><i class="fa-solid fa-wallet"></i> ដាក់ប្រាក់តាម ABA PayWay</h2>
+            <div class="space-y-3">
+                <label class="block font-semibold">ចំនួនទឹកប្រាក់ ($ USD)</label>
+                <input type="number" value="5.00" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
+                <button onclick="alert('កំពុងតភ្ជាប់ ABA PayWay...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold">បង់ប្រាក់ជាមួយ ABA</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        const servicesData = <?php echo json_encode($services); ?>;
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            
+            const titles = {
+                'order': 'New order',
+                'services': 'Services List',
+                'history': 'Orders History',
+                'deposit': 'Add Funds (ABA PayWay)'
+            };
+            document.getElementById('current-page-label').innerText = titles[tabName];
+        }
+
+        function updateServiceDropdown() {
+            const selectedCat = document.getElementById('category-select').value;
+            const serviceSelect = document.getElementById('service-select');
+            serviceSelect.innerHTML = '';
+
+            const filtered = servicesData.filter(s => s.category === selectedCat);
+            filtered.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.rate;
+                opt.setAttribute('data-id', s.service);
+                opt.textContent = `[#${s.service}] ${s.name} ($${s.rate}/1k)`;
+                serviceSelect.appendChild(opt);
+            });
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            const serviceSelect = document.getElementById('service-select');
+            const rate = parseFloat(serviceSelect.value) || 0;
+            const qty = parseInt(document.getElementById('qty').value) || 0;
+            const total = (rate * qty) / 1000;
+            document.getElementById('total-price').innerText = '$' + total.toFixed(2);
+        }
+
+        function handleOrder(e) {
+            e.preventDefault();
+            alert('បញ្ជាទិញបានជោគជ័យ! (ភ្ជាប់ API ដាក់បញ្ចូល Order ទៅកាន់ Backend របស់អ្នកបន្ថែម)');
+        }
+
+        function filterCategory(keyword) {
+            switchTab('order');
+            const catSelect = document.getElementById('category-select');
+            for (let i = 0; i < catSelect.options.length; i++) {
+                if (catSelect.options[i].text.toLowerCase().includes(keyword.toLowerCase())) {
+                    catSelect.selectedIndex = i;
+                    updateServiceDropdown();
+                    break;
+                }
+            }
+        }
+
+        // Initialize dropdown on load
+        window.onload = function() {
+            if (servicesData && servicesData.length > 0) {
+                updateServiceDropdown();
+            }
+        };
+    </script>
+</body>
+</html>
