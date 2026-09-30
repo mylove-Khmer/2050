@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- QRCode Generator Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         body { font-family: 'Kantumruy Pro', sans-serif; }
     </style>
@@ -42,7 +40,7 @@
             <li><a href="#" onclick="switchTab('order'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50 text-blue-600"><i class="fa-solid fa-cart-shopping mr-2"></i> New Order</a></li>
             <li><a href="#" onclick="switchTab('services'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-list mr-2"></i> Services List</a></li>
             <li><a href="#" onclick="switchTab('history'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-clock-rotate-left mr-2"></i> Orders History</a></li>
-            <li><a href="#" onclick="switchTab('deposit'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-wallet mr-2"></i> Add Funds (Bakong KHQR)</a></li>
+            <li><a href="#" onclick="switchTab('deposit'); toggleSidebar();" class="block p-2 rounded hover:bg-blue-50"><i class="fa-solid fa-wallet mr-2"></i> Add Funds (ABA PayWay)</a></li>
         </ul>
     </div>
 
@@ -127,32 +125,23 @@
             </div>
         </div>
 
-        <!-- TAB 4: DEPOSIT WITH BAKONG KHQR -->
-        <div id="tab-deposit" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs space-y-3">
-            <h2 class="font-bold text-sm text-blue-600 text-center"><i class="fa-solid fa-qrcode mr-1"></i> ស្កេនបង់ប្រាក់តាម Bakong KHQR</h2>
-            <p class="text-[11px] text-gray-500 text-center">Bakong ID: <span class="font-bold text-gray-800">samnang_mon@bkrt</span></p>
+        <!-- TAB 4: DEPOSIT WITH ABA PAYWAY -->
+        <div id="tab-deposit" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs space-y-4 text-center">
+            <h2 class="font-bold text-sm text-blue-600">
+                <i class="fa-solid fa-wallet mr-1"></i> ដាក់ប្រាក់តាមរយៈ ABA PayWay
+            </h2>
+            <p class="text-gray-500 text-[11px]">ចុចប៊ូតុងខាងក្រោមเพื่อไปកាន់ទំព័រទូទាត់ប្រាក់របស់ ABA PayWay យ៉ាងមានសុវត្ថិភាព។</p>
 
-            <div>
-                <label class="block font-semibold text-gray-600 mb-1">ចំនួនទឹកប្រាក់ ($ USD)</label>
-                <input type="number" id="deposit-amount" value="5.00" min="1" step="0.5" oninput="generateKHQR()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5 text-sm">
-            </div>
+            <a href="https://link.payway.com.kh/ABAPAYuN526009h" target="_blank" class="block w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-sm hover:bg-blue-700 transition shadow">
+                <i class="fa-solid fa-qrcode mr-1"></i> បង់ប្រាក់ជាមួយ ABA PayWay
+            </a>
 
-            <!-- QR Code Box -->
-            <div class="flex justify-center my-3">
-                <div class="p-3 bg-white border-2 border-blue-500 rounded-2xl shadow-inner inline-block">
-                    <div id="qrcode" class="flex justify-center items-center"></div>
-                </div>
-            </div>
-
-            <div class="bg-blue-50 p-2.5 rounded-lg text-[11px] text-blue-800 space-y-1">
+            <div class="bg-blue-50 p-3 rounded-lg text-[11px] text-blue-800 text-left space-y-1">
                 <p class="font-semibold">💡 ណែនាំ:</p>
-                <p>១. បើក ABA Mobile ឬកម្មវិធីធនាគារផ្សេងៗស្កេន KHQR។</p>
-                <p>២. បង់ប្រាក់ទៅកាន់គណនី <span class="font-bold">samnang_mon@bkrt</span>។</p>
+                <p>១. ចុចលើប៊ូតុងខាងលើដើម្បីបើកទំព័រ ABA PayWay។</p>
+                <p>២. បញ្ចូលទឹកប្រាក់ និងស្កេនបង់ប្រាក់តាម ABA Mobile App។</p>
+                <p>៣. បន្ទាប់ពីបង់រួច សូមផ្ញើសន្លឹកប័ណ្ណ (Slip) មកកាន់ Admin ដើម្បីបន្ថែមទឹកប្រាក់ចូលក្នុងគណនីរបស់អ្នក។</p>
             </div>
-
-            <button onclick="alert('ប្រព័ន្ធកំពុងផ្ទៀងផ្ទាត់ការទូទាត់របស់អ្នក...')" class="w-full bg-blue-600 text-white py-2.5 rounded-lg font-bold hover:bg-blue-700 transition">
-                <i class="fa-solid fa-check-circle mr-1"></i> ខ្ញុំបានបង់ប្រាក់រួចរាល់
-            </button>
         </div>
 
     </div>
@@ -189,14 +178,9 @@
                 'order': 'New order',
                 'services': 'Services List',
                 'history': 'Orders History',
-                'deposit': 'Add Funds (Bakong KHQR)'
+                'deposit': 'Add Funds (ABA PayWay)'
             };
             document.getElementById('current-page-label').innerText = titles[tabName];
-
-            // បើចូលថេបដាក់ប្រាក់ ឱ្យបង្កើត KHQR ស្វ័យប្រវត្តិ
-            if(tabName === 'deposit') {
-                generateKHQR();
-            }
         }
 
         function populateCategories() {
@@ -267,24 +251,6 @@
                     break;
                 }
             }
-        }
-
-        // Generate Bakong KHQR
-        function generateKHQR() {
-            const amount = document.getElementById('deposit-amount').value || 1;
-            const bakongId = "samnang_mon@bkrt";
-            
-            document.getElementById("qrcode").innerHTML = "";
-            const qrData = `BAKONG:${bakongId}?amt=${amount}&cur=USD`;
-
-            new QRCode(document.getElementById("qrcode"), {
-                text: qrData,
-                width: 160,
-                height: 160,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
         }
 
         // Initialize on load
