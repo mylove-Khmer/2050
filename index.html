@@ -85,13 +85,13 @@
                 <div>
                     <label class="block font-semibold text-gray-600 mb-1">Category</label>
                     <select id="category-select" onchange="updateServiceDropdown()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
-                        <option>កំពុងទាញយកទិន្នន័យ...</option>
+                        <!-- Loaded via JS -->
                     </select>
                 </div>
                 <div>
                     <label class="block font-semibold text-gray-600 mb-1">Service</label>
                     <select id="service-select" onchange="calculateTotal()" class="w-full bg-gray-50 border border-gray-300 rounded-lg p-2.5">
-                        <option>សូមជ្រើសរើសសេវាកម្ម...</option>
+                        <!-- Loaded via JS -->
                     </select>
                 </div>
                 <div>
@@ -113,7 +113,7 @@
         <div id="tab-services" class="tab-content hidden bg-white p-4 rounded-xl shadow border border-gray-100 text-xs">
             <h2 class="font-bold text-sm mb-3 text-blue-600">📋 បញ្ជីសេវាកម្មទាំងអស់</h2>
             <div id="services-list-container" class="space-y-2 max-h-96 overflow-y-auto">
-                <p class="text-gray-500 text-center">កំពុងទាញយក...</p>
+                <!-- Loaded via JS -->
             </div>
         </div>
 
@@ -137,9 +137,16 @@
 
     </div>
 
-    <!-- JavaScript Fetch API -->
+    <!-- JavaScript Logic with Instant Data -->
     <script>
-        let allServices = [];
+        // ទិន្នន័យសេវាកម្មគំរូ (ធានាថាលឿន និងមិនติด CORS บน GitHub Pages)
+        const allServices = [
+            { service: 101, name: "Facebook Page Followers [Real & Fast]", category: "Facebook - Followers", rate: "1.50", min: "100", max: "50000" },
+            { service: 102, name: "Facebook Post Likes [High Quality]", category: "Facebook - Likes", rate: "0.80", min: "50", max: "10000" },
+            { service: 201, name: "TikTok Video Views [Super Fast]", category: "TikTok - Views", rate: "0.10", min: "100", max: "1000000" },
+            { service: 202, name: "TikTok Followers [Non-Drop]", category: "TikTok - Followers", rate: "2.20", min: "100", max: "20000" },
+            { service: 301, name: "Telegram Channel Members [Real]", category: "Telegram - Members", rate: "1.20", min: "100", max: "50000" }
+        ];
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('-translate-x-full');
@@ -156,32 +163,6 @@
                 'deposit': 'Add Funds (ABA PayWay)'
             };
             document.getElementById('current-page-label').innerText = titles[tabName];
-        }
-
-        // Fast Fetch API
-        async function fetchServices() {
-            const url = 'https://khmer-smm.com/api/v2';
-            const formData = new FormData();
-            formData.append('key', 'bfaefa38070b4c0510831f7a625e69f1');
-            formData.append('action', 'services');
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    body: formData
-                });
-                allServices = await response.json();
-                
-                if (Array.isArray(allServices)) {
-                    populateCategories();
-                    populateServicesList();
-                } else {
-                    document.getElementById('category-select').innerHTML = '<option>មិនអាចទាញយកទិន្នន័យបានទេ</option>';
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                document.getElementById('category-select').innerHTML = '<option>មានបញ្ហាในการតភ្ជាប់ API (CORS or Network Error)</option>';
-            }
         }
 
         function populateCategories() {
@@ -254,9 +235,10 @@
             }
         }
 
-        // Run fetch on load
+        // Initialize on load
         window.onload = function() {
-            fetchServices();
+            populateCategories();
+            populateServicesList();
         };
     </script>
 </body>
